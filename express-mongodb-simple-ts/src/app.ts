@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import authorityRouter from './routes/authority-route';
+import imageRouter from './routes/image-route';
 import cors from 'cors';
 import helmet from 'helmet';
 import { restErrorHandler } from './handlers/rest-error-handler';
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/authorities', authorityRouter);
+app.use('/api/images', imageRouter);
 
 app.use(restErrorHandler);
 
