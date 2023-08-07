@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { COLLECTION_AUTHORITIES } from "../config/db-constant";
-import getConnection from "../config/mongodb";
+import getConnection from "../config/mongodb-client";
 import { Authority } from "../types/authority";
 
 

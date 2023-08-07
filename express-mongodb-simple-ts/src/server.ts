@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import app from './app';
+import { connectToMongodb } from './config/mongodb-db';
 
 dotenv.config();
 
@@ -9,4 +10,12 @@ const callback = () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 }
 
-app.listen(port, callback);
+connectToMongodb().then(
+  function () {
+    app.listen(port, callback);
+  },
+  function (error) {
+    console.log(error);
+  }
+);
+

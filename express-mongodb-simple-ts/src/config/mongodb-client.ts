@@ -15,8 +15,9 @@ if (!process.env.MONGODB_URI) {
 }
 
 const client = new MongoClient(process.env.MONGODB_URI, options);
-client.on('commandStarted', (event) => console.debug(event));
-client.on('commandSucceeded', (event) => console.debug(event));
+
+//client.on('commandStarted', (event) => console.debug(event));
+//client.on('commandSucceeded', (event) => console.debug(event));
 client.on('commandFailed', (event) => console.debug(event));
 
 export default client.connect();
