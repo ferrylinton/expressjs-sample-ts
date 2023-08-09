@@ -1,14 +1,10 @@
 import cors from 'cors';
 import express, { Express } from 'express';
-import favicon from 'express-favicon';
 import helmet from 'helmet';
 import { restErrorHandler } from './middleware/rest-error-handler';
-import todosRouter from './routes/todo-route';
-
+import userRouter from './routes/user-routes';
 
 const app: Express = express();
-
-app.use(favicon(__dirname + '/public/favicon.png'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,11 +14,11 @@ app.use(helmet());
 app.use(cors());
 app.options('*', cors());
 
-app.use('/api/todos', todosRouter);
-app.use(restErrorHandler);
-
-app.get('*', function (req, res) {
-    res.status(404).send({ message: 'Resource is not found' });
+app.get('/', (req, res) => {
+    res.send('Express + TypeScript Server');
 });
+
+app.use('/api/users', userRouter);
+app.use(restErrorHandler);
 
 export default app;
