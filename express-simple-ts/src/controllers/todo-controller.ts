@@ -7,7 +7,8 @@ export function find(req: Request, res: Response) {
 };
 
 export function findById(req: Request, res: Response) {
-    const todo = todoService.findById(parseInt(req.params.id as string));
+    const id = req.params.id as string;
+    const todo = todoService.findById(id);
 
     if (todo) {
         res.status(200).json(todo);
@@ -21,7 +22,7 @@ export function create(req: Request, res: Response) {
 };
 
 export function update(req: Request, res: Response) {
-    const id = parseInt(req.params.id as string);
+    const id = req.params.id as string;
     const todo = todoService.findById(id);
 
     if (todo) {
@@ -32,7 +33,8 @@ export function update(req: Request, res: Response) {
 };
 
 export function deleteById(req: Request, res: Response) {
-    const todo = todoService.deleteById(parseInt(req.params.id as string));
+    const id = req.params.id as string;
+    const todo = todoService.deleteById(id);
 
     if (todo) {
         res.status(200).json({ message: 'data is deleted' });

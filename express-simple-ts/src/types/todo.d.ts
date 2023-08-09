@@ -1,5 +1,5 @@
 type Todo = {
-    id?: number,
+    id: string,
     task: string,
     isDone: boolean,
     createdAt: Date,

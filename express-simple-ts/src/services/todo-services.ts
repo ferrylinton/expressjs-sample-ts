@@ -1,33 +1,32 @@
 const todos: Todo[] = [
-    { task: "test 1", isDone: false, createdAt: new Date(), updatedAt: new Date() },
-    { task: "test 2", isDone: false, createdAt: new Date(), updatedAt: new Date() },
-    { task: "test 3", isDone: true, createdAt: new Date(), updatedAt: new Date() }
+    { id: "111111", task: "test 1", isDone: false, createdAt: new Date(), updatedAt: new Date() },
+    { id: "222222", task: "test 2", isDone: false, createdAt: new Date(), updatedAt: new Date() },
+    { id: "333333", task: "test 3", isDone: true, createdAt: new Date(), updatedAt: new Date() }
 ];
 
 const MAX_SIZE = 10;
 
 export function find() {
-    return todos.map((todo, index) => {
-        const id = index + 1;
-        return {
-            id, ...todo
-        }
-    });
+    return todos;
 }
 
-export function findById(id: number): Todo | null {
-    if (id >= 0 && id < todos.length) {
-        return { id, ...todos[id - 1] };
+export function findById(id: string): Todo | null {
+    const index = todos.findIndex(todo => todo.id === id);
+
+    if (index !== -1) {
+        return todos[index];
     } else {
         return null;
     }
 }
 
-export function setDone(id: number): Todo | null {
-    if (id >= 0 && id < todos.length) {
-        todos[id - 1].isDone = true;
-        todos[id - 1].updatedAt = new Date();
-        return { id, ...todos[id - 1] };
+export function setDone(id: string): Todo | null {
+    const index = todos.findIndex(todo => todo.id === id);
+
+    if (index !== -1) {
+        todos[index].isDone = true;
+        todos[index].updatedAt = new Date();
+        return todos[index];
     } else {
         return null;
     }
@@ -35,22 +34,26 @@ export function setDone(id: number): Todo | null {
 
 export function create(task: string): Todo | null {
     if (todos.length === MAX_SIZE) {
-        todos.pop();
+        todos.shift();
     }
 
-    const id = todos.length + 1;
-    const todo: Todo = { task, isDone: false, createdAt: new Date(), updatedAt: new Date() }
+    const todo: Todo = { id:randomId(),  task, isDone: false, createdAt: new Date(), updatedAt: new Date() }
     todos.push(todo);
 
-    return { id, ...todo };
+    return todo;
 }
 
-export function deleteById(id: number) {
-    if (id >= 0 && id < todos.length) {
-        const index = id - 1;
+export function deleteById(id: string) {
+    const index = todos.findIndex(todo => todo.id === id);
+
+    if (index !== -1) {
         todos.splice(index, 1);
-        return id
+        return id;
     } else {
         return null;
     }
 }
+
+const randomId = function (length = 6) {
+    return Math.random().toString(36).substring(2, length + 2);
+};
