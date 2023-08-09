@@ -18,7 +18,12 @@ app.use(helmet());
 app.use(cors());
 app.options('*', cors());
 
+app.get('/', (req, res) => {
+    res.json({ message: 'ok' })
+});
+
 app.use('/api/todos', todosRouter);
+
 app.use(restErrorHandler);
 
 app.get('*', function (req, res) {

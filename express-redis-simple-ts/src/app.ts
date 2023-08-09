@@ -2,7 +2,7 @@ import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import { restErrorHandler } from './middleware/rest-error-handler';
-import userRouter from './routes/user-routes';
+import redisRouter from './routes/redis-routes';
 
 const app: Express = express();
 
@@ -15,10 +15,15 @@ app.use(cors());
 app.options('*', cors());
 
 app.get('/', (req, res) => {
-    res.send('Express + TypeScript Server');
+    res.json({ message: 'ok' })
 });
 
-app.use('/api/users', userRouter);
+app.use('/api/redis', redisRouter);
+
 app.use(restErrorHandler);
+
+app.get('*', function (req, res) {
+    res.status(404).send({ message: 'Resource is not found' });
+});
 
 export default app;
