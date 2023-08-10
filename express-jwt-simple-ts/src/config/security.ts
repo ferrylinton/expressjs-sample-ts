@@ -1,8 +1,8 @@
-import { expressjwt, Request as JWTRequest, TokenGetter } from "express-jwt";
+import { expressjwt, Request as JWTRequest } from "express-jwt";
+import * as authService from '../services/auth-service';
 import { JWT_SECRET } from "./constant";
 
 function getToken(req: JWTRequest) {
-
     if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
         return req.headers.authorization.split(" ")[1] as string;
     } else if (req.query && req.query.token) {
@@ -18,9 +18,10 @@ export function securityConfig() {
         algorithms: ["HS256"],
         credentialsRequired: true,
         getToken,
+        isRevoked: authService.isRevoked
     }).unless({
         path: [
-            '/api/authenticate'
+            '/authenticate'
         ]
     });
 }

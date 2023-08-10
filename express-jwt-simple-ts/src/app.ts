@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     res.json({ message: 'ok' })
 });
 
-app.use('/api/authenticate', authRouter)
+app.use(authRouter)
 app.use('/api/todos', todoRouter);
 
 app.use(restErrorHandler);
