@@ -2,12 +2,12 @@
 import { Request as JWTRequest } from "express-jwt";
 import jsonwebtoken, { Jwt, JwtPayload, SignOptions } from 'jsonwebtoken';
 import { nanoid } from 'nanoid';
-import { JWT_SECRET } from '../config/constant';
+import { JWT_EXPIRES_IN, JWT_SECRET } from '../config/constant';
 
 const payloads: JwtPayload[] = [];
 
 const signOptions: SignOptions = {
-    expiresIn: '10s',
+    expiresIn: JWT_EXPIRES_IN,
     algorithm: 'HS256'
 }
 

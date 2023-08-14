@@ -17,7 +17,8 @@ export async function authenticate(req: Request, res: Response) {
 };
 
 export async function me(req: JWTRequest, res: Response) {
-    res.status(200).json(req.auth);
+    const payload = req.auth as JwtPayload;
+    res.status(200).json({username : payload.sub});
 };
 
 export async function revoke(req: JWTRequest, res: Response) {
