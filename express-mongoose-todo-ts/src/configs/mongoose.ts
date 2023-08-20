@@ -1,14 +1,8 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import util from 'util';
+import { ENV, MONGODB_URI } from './constant';
 import { logger } from './winston';
 
-dotenv.config();
-
-const { MONGODB_URI } = process.env;
-const env = process.env.NODE_ENV || 'development';
-
-if (!MONGODB_URI) throw new Error('MONGODB_URI not defined');
 
 const options = {
     autoIndex: true, // Don't build indexes
@@ -18,11 +12,21 @@ const options = {
     family: 4 // Use IPv4, skip trying IPv6
 };
 
-if (env === 'development') {
+
     mongoose.set('debug', (collectionName: string, methodName: string, ...methodArgs: any[]) => {
-        const args = methodArgs.map(arg => util.format(arg));
-        logger.debug(`${collectionName}.${methodName}(${args})`)
+        try {
+            const args = methodArgs.map(arg => util.format(arg));
+            
+            logger.log({
+                mongoose: true,
+                level: 'debug',
+                message: `MONGOOSE :: ${collectionName}.${methodName}(${args})`
+            });
+
+        } catch (error) {
+            console.error(error);
+        }
     });
-}
+
 
 export default mongoose.connect(`${MONGODB_URI}`, options);
