@@ -1,10 +1,10 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { getCollection } from "../configs/mongodb";
 
 export const find = async (): Promise<Todo[]> => {
     const todoes: Todo[] = [];
     const todoesCollection = await getCollection<Todo>('todoes');
-    const cursor = todoesCollection.find();
+    const cursor = todoesCollection.find().limit(10).sort({ 'createdAt': -1 });
 
     for await (const doc of cursor) {
         const { _id, ...other } = doc;
@@ -17,19 +17,48 @@ export const find = async (): Promise<Todo[]> => {
 
 export const findById = async (_id: ObjectId) => {
     const todoesCollection = await getCollection<Todo>('todoes');
-    return await todoesCollection.findOne({_id});
+    const todo = await todoesCollection.findOne({ _id });
+
+    if (todo) {
+        const { _id, ...other } = todo;
+        return { id: _id.toHexString(), ...other };
+    } else {
+        return todo;
+    }
 }
 
-export const save = async (task: string) => {
+export const create = async (task: string) => {
     const todoesCollection = await getCollection<Todo>('todoes');
+
+    // Insert new data
+
     const now = new Date();
-    const data: Todo = {
+    const todo: Todo = {
         task,
         done: false,
         createdAt: now,
         updatedAt: now
     }
-    return await todoesCollection.insertOne(data);
+    const { insertedId: id } = await todoesCollection.insertOne(todo);
+    const { _id, ...other } = todo as WithId<Todo>;
+
+    // Delete data if total data > 20
+
+    const count = await todoesCollection.countDocuments();
+    if (count > 20) {
+        const idDocuments = await todoesCollection
+            .find()
+            .project({ _id: 1 })
+            .limit(count - 19)
+            .sort({ createdAt: 1 })
+            .toArray();
+
+        
+        const ids: ObjectId[] = idDocuments.map(doc => doc._id);
+        todoesCollection.deleteMany({ _id: { $in: ids } })
+    }
+
+    return { id, ...other };
 }
 
 export const update = async (_id: ObjectId, todoUpdate: TodoUpdate) => {

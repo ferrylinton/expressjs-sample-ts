@@ -3,7 +3,7 @@ import { TODO_COLLECTION, createTodoCollection } from "./todo-schema";
 
 
 export const initSchema = async () => {
-    console.log('init schema ...');
+    console.log('[MONGODB] init schema ...');
     const db = await getDb();
 
     const collections = await db.listCollections().toArray();

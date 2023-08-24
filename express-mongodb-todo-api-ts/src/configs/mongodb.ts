@@ -10,6 +10,12 @@ const mongoClientOptions: MongoClientOptions = {
     }
 };
 
+export const transactionOptions = {
+    readConcern: { level: 'snapshot' },
+    writeConcern: { w: 'majority' },
+    readPreference: 'primary'
+  };
+
 const mongoClient = MongoClient.connect(MONGODB_URL, mongoClientOptions);
 
 export const getDb = async () => {

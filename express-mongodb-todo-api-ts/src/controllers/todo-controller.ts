@@ -19,8 +19,7 @@ export async function findById(req: Request, res: Response, next: NextFunction) 
         if (ObjectId.isValid(id)) {
             const todo = await todoService.findById(new ObjectId(id));
             if (todo) {
-                const { _id, ...other } = todo;
-                res.status(200).json({ id, ...other });
+                res.status(200).json(todo);
             } else {
                 res.status(404).json({ message: 'Data is not found' });
             }
@@ -35,11 +34,11 @@ export async function findById(req: Request, res: Response, next: NextFunction) 
 export async function create(req: Request, res: Response, next: NextFunction) {
     try {
         const { task } = req.body;
-        const result = await todoService.save(task);
+        const todo = await todoService.create(task);
 
-        result
-            ? res.status(201).send({ message: `Data is created with id ${result.insertedId}` })
-            : res.status(500).send({ message: "Failed to create a new data" });
+        todo
+            ? res.status(201).json(todo)
+            : res.status(500).json({ message: "Failed to create a new data" });
     } catch (error) {
         next(error);
     }
@@ -54,8 +53,8 @@ export async function update(req: Request, res: Response, next: NextFunction) {
         } else {
             const { modifiedCount } = await todoService.update(new ObjectId(id), req.body);
             modifiedCount
-                ? res.status(200).send({ message: `Data is updated` })
-                : res.status(404).send({ message: `Data is not found` });
+                ? res.status(200).json({ message: `Data is updated` })
+                : res.status(404).json({ message: `Data is not found` });
         }
 
     } catch (error) {
