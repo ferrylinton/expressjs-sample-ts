@@ -1,9 +1,10 @@
 import { ObjectId, WithId } from "mongodb";
 import { getCollection } from "../configs/mongodb";
+import { TODOES_COLLECTION } from "../configs/db-constant";
 
 export const find = async (): Promise<Todo[]> => {
     const todoes: Todo[] = [];
-    const todoesCollection = await getCollection<Todo>('todoes');
+    const todoesCollection = await getCollection<Todo>(TODOES_COLLECTION);
     const cursor = todoesCollection.find().limit(10).sort({ 'createdAt': -1 });
 
     for await (const doc of cursor) {
@@ -16,7 +17,7 @@ export const find = async (): Promise<Todo[]> => {
 }
 
 export const findById = async (_id: ObjectId) => {
-    const todoesCollection = await getCollection<Todo>('todoes');
+    const todoesCollection = await getCollection<Todo>(TODOES_COLLECTION);
     const todo = await todoesCollection.findOne({ _id });
 
     if (todo) {
@@ -28,7 +29,7 @@ export const findById = async (_id: ObjectId) => {
 }
 
 export const create = async (task: string) => {
-    const todoesCollection = await getCollection<Todo>('todoes');
+    const todoesCollection = await getCollection<Todo>(TODOES_COLLECTION);
 
     // Insert new data
 
@@ -49,7 +50,7 @@ export const create = async (task: string) => {
         const idDocuments = await todoesCollection
             .find()
             .project({ _id: 1 })
-            .limit(count - 19)
+            .limit(count - 20)
             .sort({ createdAt: 1 })
             .toArray();
 
@@ -62,7 +63,7 @@ export const create = async (task: string) => {
 }
 
 export const update = async (_id: ObjectId, todoUpdate: TodoUpdate) => {
-    const todoesCollection = await getCollection<Todo>('todoes');
+    const todoesCollection = await getCollection<Todo>(TODOES_COLLECTION);
 
     const data: Partial<Todo> = {
         updatedAt: new Date()
@@ -80,6 +81,6 @@ export const update = async (_id: ObjectId, todoUpdate: TodoUpdate) => {
 }
 
 export const deleteById = async (_id: ObjectId) => {
-    const todoesCollection = await getCollection<Todo>('todoes');
+    const todoesCollection = await getCollection<Todo>(TODOES_COLLECTION);
     return await todoesCollection.deleteOne({ _id });
 }

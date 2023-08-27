@@ -1,5 +1,5 @@
 import { Document, MongoClient, MongoClientOptions } from 'mongodb';
-import { MONGODB_AUTH_SOURCE, MONGODB_DATABASE, MONGODB_PASSWORD, MONGODB_URL, MONGODB_USERNAME } from './constant';
+import { MONGODB_AUTH_SOURCE, MONGODB_DATABASE, MONGODB_PASSWORD, MONGODB_URL, MONGODB_USERNAME } from './env-constant';
 
 const mongoClientOptions: MongoClientOptions = {
     authMechanism: "DEFAULT",
