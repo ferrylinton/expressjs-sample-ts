@@ -1,16 +1,19 @@
 {
-  "name": "express-redis-todo-api-ts",
+  "name": "express-jwt-redis-api-ts",
   "version": "1.0.0",
-  "description": "Simple Todo Application with Express JS and Redis",
+  "description": "Simple Todo Application with JWT",
   "main": "dist/server.js",
   "scripts": {
     "build": "npx tsc",
     "start": "cross-env NODE_ENV=production nodemon dist/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts"
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
+    "secret": "ts-node secret.ts"
   },
   "keywords": [
     "express js",
+    "mongodb",
     "redis",
+    "jwt",
     "typescript"
   ],
   "author": "Ferry L. H.",
@@ -23,6 +26,8 @@
     "express-favicon": "^2.0.4",
     "helmet": "^7.0.0",
     "ip": "^1.1.8",
+    "jsonwebtoken": "^9.0.1",
+    "mongodb": "^5.8.0",
     "redis": "^4.6.8",
     "saslprep": "^1.0.3",
     "serialize-javascript": "^6.0.1",
@@ -32,6 +37,7 @@
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/ip": "^1.1.0",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/node": "^20.4.5",
     "@types/serialize-javascript": "^5.0.2",
     "@types/uuid": "^9.0.2",
