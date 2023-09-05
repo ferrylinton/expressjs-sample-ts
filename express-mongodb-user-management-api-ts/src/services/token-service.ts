@@ -15,7 +15,8 @@ export function getTokenFromRequest(req: Request) {
     return null;
 }
 
-export function createTokenFromRequest(username: string, req: Request) {
+export function createTokenFromRequest(req: Request) {
+    const username = req.body.username;
     const clientInfo = getClientInfo(req);
     const clientIp = requestIp.getClientIp(req);
     const createdAt = new Date().getTime();
@@ -30,7 +31,6 @@ export function isTokenValid(username: string, req: Request, token: string) {
         const clientInfo = getClientInfo(req);
         const clientIp = requestIp.getClientIp(req);
         const createdAt = arr[0];
-
         return token === createdAt + '-' + sha256(`${REDIS_TOKEN_KEY}${username}${clientIp}${clientInfo}${createdAt}`).toString();
     } else {
         return false;
@@ -44,7 +44,5 @@ function getClientInfo(req: Request) {
         os: os?.name
     }
 
-    console.log(clientInfo);
-    console.log(JSON.stringify(clientInfo));
     return JSON.stringify(clientInfo);
 }

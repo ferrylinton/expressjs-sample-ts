@@ -7,7 +7,8 @@
     "build": "npx tsc",
     "start": "cross-env NODE_ENV=production nodemon dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
-    "db-init-collection": "cross-env NODE_ENV=development ts-node src/db/init-collection.ts",
+    "db-create-collection": "cross-env NODE_ENV=development ts-node src/db/collections/create-collection.ts",
+    "db-drop-collection": "cross-env NODE_ENV=development ts-node src/db/collections/drop-collection.ts",
     "db-init-data": "cross-env NODE_ENV=development ts-node src/db/init-data.ts",
     "db-test-data": "cross-env NODE_ENV=development ts-node src/db/test-data.ts",
     "secret": "node secret.js"
