@@ -9,8 +9,8 @@
     "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts",
     "db-create-collection": "cross-env NODE_ENV=development ts-node src/db/collections/create-collection.ts",
     "db-drop-collection": "cross-env NODE_ENV=development ts-node src/db/collections/drop-collection.ts",
-    "db-init-data": "cross-env NODE_ENV=development ts-node src/db/init-data.ts",
-    "db-test-data": "cross-env NODE_ENV=development ts-node src/db/test-data.ts",
+    "db-init-data": "cross-env NODE_ENV=development ts-node src/db/datas/init-data.ts",
+    "db-test-data": "cross-env NODE_ENV=development ts-node src/db/datas/test-data.ts",
     "secret": "node secret.js"
   },
   "keywords": [
@@ -36,7 +36,8 @@
     "request-ip": "^3.3.0",
     "saslprep": "^1.0.3",
     "ua-parser-js": "^1.0.35",
-    "uid": "^2.0.2"
+    "uid": "^2.0.2",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

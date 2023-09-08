@@ -2,12 +2,14 @@ import bcrypt from 'bcrypt';
 import { ObjectId, WithId } from "mongodb";
 import { getCollection } from "../configs/mongodb";
 import { USER_COLLECTION } from "../db/schemas/user-schema";
+import { BASIC } from '../configs/auth-constant';
 
 
 export const find = async (): Promise<User[]> => {
-    const users: User[] = [];
     const usersCollection = await getCollection<User>(USER_COLLECTION);
     const cursor = usersCollection.find().limit(10).sort({ 'createdAt': -1 });
+
+    const users: User[] = [];
 
     for await (const doc of cursor) {
         const { _id, ...other } = doc;
@@ -42,19 +44,7 @@ export const findByUsername = async (username: string) => {
     return null;
 }
 
-export const verifyUsernameAndPassword = async (username: string, password: string) => {
-    const usersCollection = await getCollection<User>(USER_COLLECTION);
-    const user = await usersCollection.findOne({ username });
-
-    if (user && bcrypt.compareSync(password, user.password)) {
-        const { _id, ...other } = user;
-        return { id: _id.toHexString(), ...other };
-    }
-
-    return null;
-}
-
-export const create = async (username: string, password: string) => {
+export const create = async (username: string, password: string, email: string, authorities: string[] = [BASIC]) => {
     const usersCollection = await getCollection<User>(USER_COLLECTION);
 
     password = bcrypt.hashSync(password, 10);
@@ -62,10 +52,11 @@ export const create = async (username: string, password: string) => {
     const user: User = {
         username,
         password,
+        email,
         activated: false,
         locked: false,
         loginAttempt: 0,
-        authorities: [],
+        authorities,
         createdAt: now,
         updatedAt: now
     }

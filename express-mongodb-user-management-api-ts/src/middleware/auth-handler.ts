@@ -1,19 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
-import * as tokenService from '../services/token-service';
+import * as authService from '../services/auth-service';
 import * as redisService from '../services/redis-service';
 
 const PUBLIC_API = ['/', '/auth/token']
 
 export const authHandler = async (req: Request, res: Response, next: NextFunction) => {
     if (PUBLIC_API.indexOf(req.path) === -1) {
-        const token = tokenService.getTokenFromRequest(req);
+        const token = authService.getTokenFromRequest(req);
 
         if (token) {
             try {
-                const username = await redisService.findToken(token);
-
-                if (username) {
-                    if (tokenService.isTokenValid(username, req, token)) {
+                const authDataString = await redisService.findToken(token);
+                
+                if (authDataString) {
+                    const authData : AuthData = JSON.parse(authDataString as string);
+                    console.log(authData);
+                    if (authData.username) {
+                        req.auth = authData;
                         next();
                     } else {
                         return res.status(401).json({ message: "Invalid token" });

@@ -22,10 +22,14 @@ export const createUserchema = async (db: Db) => {
                             bsonType: "string",
                             description: "Must be a string"
                         },
+                        email: {
+                            bsonType: "string",
+                            description: "Must be a string and unique"
+                        },
                         authorities: {
                             bsonType: "array",
                             description: "Authorities must be an array of strings",
-                            minItems: 0,
+                            minItems: 1,
                             uniqueItems: true,
                             items: {
                                 bsonType: "string"
@@ -52,7 +56,7 @@ export const createUserchema = async (db: Db) => {
                             description: "Must be a date"
                         }
                     },
-                    required: ["username", "password", "createdAt", "updatedAt"],
+                    required: ["username", "email", "password", "authorities", "loginAttempt", "activated", "locked", "createdAt", "updatedAt"],
                 },
             },
             validationLevel: "strict",

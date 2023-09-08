@@ -7,12 +7,14 @@ import { ipWhitelistHandler } from './middleware/ip-whitelist-handler';
 import { notFoundHandler } from './middleware/not-found-handler';
 import { restErrorHandler } from './middleware/rest-error-handler';
 import setRoutes from './routers';
+import { clientInfoHandler } from './middleware/client-info-handler';
 
 
 const app: Express = express();
 
 app.use(favicon(__dirname + '/public/favicon.png'));
 app.use(ipWhitelistHandler);
+app.use(clientInfoHandler);
 app.use(corsHandler);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -2,6 +2,7 @@ type User = {
     id?: string,
     username: string,
     password: string,
+    email: string,
     loginAttempt: number,
     activated: boolean,
     locked: boolean,

@@ -12,12 +12,12 @@ export const findToken = async (token: string) => {
     return await redisClient.GET(`${REDIS_PREFIX}:${token}`);
 }
 
-export const saveToken = async (username: string, token: String) => {
+export const saveToken = async (username: string, token: String, authData: string) => {
     await deleteTokenByUsername(username);
     const [result1, result2] = await redisClient
         .multi()
         .SET(`${REDIS_PREFIX}:${username}`, `${token}`, { EX, NX: true })
-        .SET(`${REDIS_PREFIX}:${token}`, `${username}`, { EX, NX: true })
+        .SET(`${REDIS_PREFIX}:${token}`, `${authData}`, { EX, NX: true })
         .exec();
 
     if (result1 === 'OK' && result2 === 'OK') {

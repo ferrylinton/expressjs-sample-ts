@@ -1,23 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
+import * as authService from '../services/auth-service';
 import * as redisService from '../services/redis-service';
-import * as tokenService from '../services/token-service';
-import * as userService from '../services/user-service';
+import { AuthenticateSchema } from '../validations/authenticate-schema';
+
 
 export async function generateToken(req: Request, res: Response, next: NextFunction) {
     try {
-        const username = req.body.username;
-        const password = req.body.password;
+        const validation = AuthenticateSchema.safeParse(req.body);
 
-        const user = await userService.verifyUsernameAndPassword(username, password);
+        if (validation.success) {
+            const user = await authService.authenticate(validation.data);
 
-        if (user) {
-            const token = tokenService.createTokenFromRequest(req);
-            await redisService.saveToken(username, token);
-            res.status(200).json({ username, token });
-        } else {
-            res.status(401).json({ message: "Invalid username or password" });
+            if (user) {
+                const result = await authService.generateToken(user, req.client);
+                return res.status(200).json(result);
+            }
         }
 
+        res.status(401).json({ message: "Invalid username or password" });
     } catch (error) {
         next(error);
     }
@@ -25,7 +25,7 @@ export async function generateToken(req: Request, res: Response, next: NextFunct
 
 export async function revokeToken(req: Request, res: Response, next: NextFunction) {
     try {
-        const token = tokenService.getTokenFromRequest(req) as string;
+        const token = authService.getTokenFromRequest(req) as string;
         await redisService.deleteToken(token);
         res.status(200).json({ message: 'Token is revoked' });
     } catch (error) {
